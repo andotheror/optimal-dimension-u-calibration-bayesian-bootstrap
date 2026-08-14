@@ -1,0 +1,303 @@
+\documentclass[twoside]{article}
+\usepackage[preprint]{aistats2027}
+\usepackage[round,authoryear]{natbib}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{url}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\D}{\mathsf D}
+\newcommand{\TV}{d_{\mathrm{TV}}}
+\newcommand{\Reg}{\operatorname{Reg}}
+\newcommand{\supp}{\operatorname{supp}}
+\begin{document}
+\runningauthor{}
+\onecolumn
+\aistatstitle{Supplement to ``Optimal-Dimension U-Calibration by Bayesian Bootstrap''}
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+
+\section{Dirichlet Laws on Faces}
+
+For $c\in[0,\infty)^K\setminus\{0\}$, let $I=\{i:c_i>0\}$ and $N=\sum_ic_i$. We define $\D_c$ on the face
+\[
+\Delta_I=\{p\in\Delta_K:p_i=0\text{ for }i\notin I\}
+\]
+by drawing independent $G_i\sim\operatorname{Gamma}(c_i,1)$ for $i\in I$, setting all other coordinates to zero, and normalizing. Relative to Lebesgue measure on this face, the density is
+\[
+f_c(p)=\frac{\Gamma(N)}{\prod_{i\in I}\Gamma(c_i)}\prod_{i\in I}p_i^{c_i-1}.
+\tag{S1}
+\]
+If $I$ is a singleton, this notation means the corresponding point mass.
+
+\begin{lemma}[Exact density ratio and total variation]
+\label{lem:face-tv}
+If $c_i>0$, then
+\[
+\frac{d\D_{c+e_i}}{d\D_c}(p)=\frac{Np_i}{c_i}
+\]
+and
+\[
+\TV(\D_c,\D_{c+e_i})
+=\frac12\E_{P\sim\D_c}\left|1-\frac{NP_i}{c_i}\right|
+\leq\frac12\sqrt{\frac{N-c_i}{c_i(N+1)}}.
+\tag{S2}
+\]
+If $c_i=0$, the two distributions are mutually singular unless $c$ is zero, which never arises in this lemma.
+\end{lemma}
+
+\begin{proof}
+The normalizing constants in (S1) satisfy
+\[
+\frac{\Gamma(N+1)}{\Gamma(N)}\frac{\Gamma(c_i)}{\Gamma(c_i+1)}=\frac{N}{c_i},
+\]
+and the monomial gains a factor $p_i$. This proves the density ratio. The marginal $P_i$ is $\operatorname{Beta}(c_i,N-c_i)$, with
+\[
+\E P_i=\frac{c_i}{N},\qquad
+\operatorname{Var}(P_i)=\frac{c_i(N-c_i)}{N^2(N+1)}.
+\]
+The identity in (S2) is the density-ratio formula for total variation. Cauchy--Schwarz and the displayed variance give the upper bound. If $c_i=0$, $P_i=0$ under $\D_c$ and $P_i>0$ almost surely under $\D_{c+e_i}$ whenever another coordinate is present, so the supports are disjoint up to null sets.
+\end{proof}
+
+For later reference, define $H_n^{(1/2)}=\sum_{j=1}^nj^{-1/2}$ and $H_0^{(1/2)}=0$. Integral comparison gives
+\[
+H_n^{(1/2)}\leq1+\int_1^nx^{-1/2}dx=2\sqrt n-1\leq2\sqrt n.
+\tag{S3}
+\]
+
+\section{Weighted Be the Leader and Exponential Size Bias}
+
+We first record the weighted form of be the leader with no regularity assumption on the loss.
+
+\begin{lemma}[Weighted be the leader]
+\label{lem:weighted-btl}
+Let $w_t\geq0$, let $f_t$ be arbitrary functions on a common action space, and choose $a_{t+1}\in\arg\min_a\sum_{s=1}^tw_sf_s(a)$. Then
+\[
+\sum_{t=1}^Tw_tf_t(a_{t+1})\leq\min_a\sum_{t=1}^Tw_tf_t(a).
+\tag{S4}
+\]
+\end{lemma}
+
+\begin{proof}
+Let $F_t(a)=\sum_{s=1}^tw_sf_s(a)$. Induction on $T$ gives
+\begin{align*}
+\sum_{t=1}^Tw_tf_t(a_{t+1})
+&\leq F_{T-1}(a_T)+w_Tf_T(a_{T+1})\\
+&\leq F_{T-1}(a_{T+1})+w_Tf_T(a_{T+1})\\
+&=F_T(a_{T+1})=\min_aF_T(a).
+\end{align*}
+The second line uses the optimality of $a_T$ for $F_{T-1}$ in the direction $F_{T-1}(a_T)\leq F_{T-1}(a_{T+1})$. If some prefix has total weight zero, any action is a leader and the same induction applies.
+\end{proof}
+
+For a proper loss and weighted categorical observations, the normalized weighted histogram is a leader. Indeed, if $S=\sum_tw_t>0$ and $q=S^{-1}\sum_tw_te_{y_t}$, then
+\[
+\sum_tw_t\ell(p,y_t)=S\sum_iq_i\ell(p,i),
+\]
+which is minimized at $p=q$ by properness.
+
+\begin{lemma}[Exponential Palm identity]
+\label{lem:palm}
+Let $W_1,\ldots,W_T$ be independent $\operatorname{Exp}(1)$ variables. For every integrable measurable $F$,
+\[
+\E[W_tF(W_1,\ldots,W_T)]
+=\E[F(W_1,\ldots,W_t+W_t',\ldots,W_T)],
+\tag{S5}
+\]
+where $W_t'$ is an independent $\operatorname{Exp}(1)$ variable.
+\end{lemma}
+
+\begin{proof}
+The density $we^{-w}$ integrates to one and is the $\operatorname{Gamma}(2,1)$ density. A sum of two independent unit-rate exponentials has this law. Integrating the other coordinates proves (S5).
+\end{proof}
+
+\begin{proposition}[Deterministic Dirichlet BTPL inequality]
+\label{prop:det-btpl}
+Fix any outcome path $y_{1:T}$. For every proper loss in $[-1,1]$,
+\[
+\sum_{t=1}^T\E_{P\sim\D_{c_t}}\ell(P,y_t)
+-\min_p\sum_{t=1}^T\ell(p,y_t)
+\leq\sum_{i=1}^KH_{n_i}^{(1/2)}.
+\tag{S6}
+\]
+\end{proposition}
+
+\begin{proof}
+Use one global exponential weight $W_t$ for each observation and define the normalized weighted histogram $A_{t+1}$ through round $t$. Lemma~\ref{lem:weighted-btl} applies simultaneously to every proper loss. Taking expectations on its right side gives
+\[
+\E\min_p\sum_tW_t\ell(p,y_t)
+\leq\min_p\sum_t\E[W_t]\ell(p,y_t)
+=\min_p\sum_t\ell(p,y_t).
+\tag{S7}
+\]
+Suppose $y_t=i$ and this is its $j$th occurrence. The classwise sums of the ordinary weights through time $t$ are independent gamma variables with shape vector $c_t$. Hence $A_{t+1}\sim\D_{c_t}$. In the weighted expectation $\E[W_t\ell(A_{t+1},y_t)]$, Lemma~\ref{lem:palm} adds one exponential weight to class $i$. Its normalized histogram has law $\D_{c_t+e_i}$. We have proved
+\[
+\sum_t\E_{\D_{c_t+e_{y_t}}}\ell(P,y_t)
+\leq\min_p\sum_t\ell(p,y_t).
+\tag{S8}
+\]
+For a function in $[-1,1]$, changing a distribution costs at most twice total variation. Lemma~\ref{lem:face-tv} bounds the replacement of $\D_{c_t+e_i}$ by $\D_{c_t}$ by $1/\sqrt j$. Summing by class proves (S6).
+\end{proof}
+
+The use of globally coupled weights in this proof does not change the algorithm. Proposition~\ref{prop:det-btpl} is a deterministic inequality in the outcome path and the marginal laws $\D_{c_t}$. The online forecaster uses independent fresh draws with exactly those marginals.
+
+\section{Adaptive Outcomes and Simultaneous Concentration}
+
+Let $U_t$ be an independent random seed used to generate $P_t\sim\D_{c_{t-1}}$. Let $\mathcal F_{t-1}$ contain all previous seeds, forecasts, and outcomes. A nonanticipating adversary selects $y_t$ as an $\mathcal F_{t-1}$-measurable variable, after which $P_t$ is generated from the fresh $U_t$. The order in which the unrevealed $y_t$ and $P_t$ are physically computed is immaterial. The requirement is that $y_t$ not depend on $U_t$ or $P_t$.
+
+For a fixed loss, define
+\[
+\mu_t=\E[\ell(P_t,y_t)\mid\mathcal F_{t-1}]
+=\E_{P\sim\D_{c_{t-1}}}\ell(P,y_t),
+\]
+with $\D_0$ the first-round point mass. For every realized outcome path, the fixed-sequence proof in the main paper and Proposition~\ref{prop:det-btpl} give
+\[
+\sum_{t=1}^T\mu_t-\min_p\sum_{t=1}^T\ell(p,y_t)
+\leq6\sum_i\sqrt{n_i}.
+\tag{S9}
+\]
+This proves the expected adaptive guarantee after taking expectations. It also gives concentration because $Z_t=\ell(P_t,y_t)-\mu_t$ is a martingale difference.
+
+\begin{theorem}[Finite families and covers]
+\label{thm:covers}
+Let $\mathcal L_0$ contain $M$ proper losses in $[-1,1]$. Under the preceding adaptive protocol, with probability at least $1-\delta$,
+\[
+\max_{\ell\in\mathcal L_0}\widehat\Reg_\ell(T)
+\leq6\sum_i\sqrt{n_i}+\sqrt{2T\log(M/\delta)}.
+\tag{S10}
+\]
+For a fixed oblivious path,
+\[
+\E\max_{\ell\in\mathcal L_0}\widehat\Reg_\ell(T)
+\leq6\sum_i\sqrt{n_i}+\sqrt{2T\log M}.
+\tag{S11}
+\]
+More generally, suppose a class $\mathcal L$ has an $\varepsilon$-cover of size $M(\varepsilon)$ in uniform norm over $\Delta_K\times[K]$. Then with probability at least $1-\delta$,
+\[
+\sup_{\ell\in\mathcal L}\widehat\Reg_\ell(T)
+\leq6\sum_i\sqrt{n_i}+2\varepsilon T
++\sqrt{2T\log(M(\varepsilon)/\delta)}.
+\tag{S12}
+\]
+\end{theorem}
+
+\begin{proof}
+For each loss, $Z_t$ has conditional mean zero and lies in an interval of length two. Conditional Hoeffding's lemma yields
+\[
+\E\!\left[e^{\lambda\sum_tZ_t}\right]\leq e^{\lambda^2T/2}.
+\tag{S13}
+\]
+Together with (S9), Chernoff's method and a union bound prove (S10). For a fixed path, apply the log-sum-exp bound to (S13):
+\[
+\E\max_{\ell\in\mathcal L_0}\sum_tZ_{t,\ell}
+\leq\frac{\log M}{\lambda}+\frac{\lambda T}{2}.
+\]
+Optimizing at $\lambda=\sqrt{2\log M/T}$ gives (S11), with the case $M=1$ following directly from mean zero. Finally, replacing a loss and its comparator by a uniformly $\varepsilon$-close cover element changes realized regret by at most $2\varepsilon T$. Apply (S10) to the cover to obtain (S12).
+\end{proof}
+
+\section{Smooth-Loss Transfer in Full Detail}
+
+Let $c\neq0$, $N=\sum_ic_i$, $q=c/N$, and $P\sim\D_c$. Dirichlet covariance is
+\[
+\operatorname{Cov}(P_i,P_j)=
+\begin{cases}
+q_i(1-q_i)/(N+1),&i=j,\\
+-q_iq_j/(N+1),&i\neq j.
+\end{cases}
+\tag{S14}
+\]
+Taking the trace gives
+\[
+\E\|P-q\|_2^2=\frac{1-\|q\|_2^2}{N+1}.
+\tag{S15}
+\]
+These formulas remain valid on a proper face after deleting zero coordinates.
+
+At round $t\geq2$, $N=t-1$ and empirical FTL predicts $q=c_{t-1}/(t-1)$. For any $\beta$-smooth loss,
+\begin{align*}
+\E[\ell(P_t,y_t)-\ell(q,y_t)]
+&\leq\left\langle\nabla\ell(q,y_t),\E[P_t-q]\right\rangle
++\frac\beta2\E\|P_t-q\|_2^2\\
+&\leq\frac\beta{2t}.
+\end{align*}
+Summing proves the transfer theorem without using properness. Properness is needed only to invoke the empirical FTL regret bound and to share the same best fixed comparator. More generally, the transfer applies to any smooth loss sequence for which empirical frequencies have a useful comparator guarantee.
+
+\section{Class Aggregation and the All-Regime Lower Bound}
+
+We record the reduction used in Corollary~3 of the main paper. It makes explicit why the worst-loss rate is capped at $T$ when the nominal alphabet is larger than the horizon.
+
+\begin{lemma}[Lifting through outcome aggregation]
+\label{lem:aggregation}
+Let $2\leq r\leq K$, let $\pi:[K]\to[r]$ be surjective, and define $A_\pi:\Delta_K\to\Delta_r$ by
+\[
+(A_\pi p)_j=\sum_{i:\pi(i)=j}p_i.
+\]
+If $\widetilde\ell:\Delta_r\times[r]\to[-1,1]$ is proper, then
+\[
+\ell(p,i)=\widetilde\ell(A_\pi p,\pi(i))
+\tag{S16}
+\]
+is proper on $\Delta_K\times[K]$. Moreover, every $r$-outcome regret lower bound transfers unchanged to $K$ outcomes.
+\end{lemma}
+
+\begin{proof}
+For $q\in\Delta_K$, the expected lifted loss is
+\[
+\sum_{i=1}^Kq_i\ell(p,i)
+=\sum_{j=1}^r(A_\pi q)_j\widetilde\ell(A_\pi p,j).
+\]
+Properness of $\widetilde\ell$ makes this expression minimal when $A_\pi p=A_\pi q$. In particular, $p=q$ is a minimizer, so $\ell$ is proper.
+
+Choose one representative $s_j\in\pi^{-1}(j)$ for each aggregated outcome. Given any $K$-outcome forecasting algorithm, map each forecast $p_t$ to $A_\pi p_t$ and restrict the adversary to outcomes $s_1,\ldots,s_r$. This produces a valid $r$-outcome forecasting algorithm. For every representative sequence $y_t=s_{z_t}$, (S16) gives equality of the incurred losses. Since $A_\pi$ is onto,
+\[
+\min_{p\in\Delta_K}\sum_t\ell(p,y_t)
+=\min_{u\in\Delta_r}\sum_t\widetilde\ell(u,z_t).
+\]
+Thus the regrets are identical, and any lower bound for the mapped algorithm transfers to the original one.
+\end{proof}
+
+\begin{corollary}[Dimension-capped lower bound]
+\label{cor:all-regime}
+For $K\geq2$ and $T\geq24$, every randomized $K$-outcome forecasting algorithm has an oblivious outcome path and a proper loss in $[-1,1]$ for which
+\[
+\Reg_\ell(T)
+=\Omega\!\left(\sqrt{\min\{K,T\}T}\right).
+\tag{S17}
+\]
+Together with the main theorem, this proves the all-regime minimax rate.
+\end{corollary}
+
+\begin{proof}
+If $K\leq T/12$, apply the lower bound of Luo, Senapati, and Sharan with $r=K$. Otherwise let $r=\lfloor T/12\rfloor$. Then $2\leq r\leq K$, $T\geq12r$, and $r\geq\min\{K,T\}/24$. Apply their $\Omega(\sqrt{rT})$ lower bound and lift its proper loss and hard outcome path by Lemma~\ref{lem:aggregation}. This gives (S17).
+\end{proof}
+
+\section{Verification Audit}
+
+The accompanying script \texttt{verify\_dirichlet.py} performs three independent checks.
+
+First, it numerically integrates the exact total variation between $\operatorname{Beta}(a,b)$ and $\operatorname{Beta}(a+1,b)$ and checks the variance upper bound in Lemma~\ref{lem:face-tv}. Second, it samples representative Dirichlet laws and checks their mean and total squared variance against (S15). Third, it uses dynamic programming over all binary outcome paths to find exact worst expected regret for the Bayesian-bootstrap forecaster under squared loss and under the V-shaped proper loss used to show that empirical FTL can have linear regret.
+
+The dynamic program keeps, for each count pair $(a,b)$, the largest cumulative expected loss among paths reaching that pair. The one-step expected loss depends only on $(a,b)$ and the next outcome. At the horizon, the program subtracts the proper-loss value of the empirical-frequency comparator and maximizes over terminal count pairs. Table~\ref{tab:audit} reports representative values. The V-shaped column follows the expected square-root law, while squared loss follows the logarithmic law. These calculations are error checks only.
+
+\begin{table}[h]
+\caption{Exact binary worst-path dynamic program.}
+\label{tab:audit}
+\centering
+\begin{tabular}{rcccc}
+\toprule
+$T$ & V-shaped regret & regret$/\sqrt T$ & squared regret & regret$/\log T$\\
+\midrule
+16 & 2.798889 & 0.699722 & 1.771800 & 0.639042\\
+64 & 5.951375 & 0.743922 & 2.464643 & 0.592621\\
+256 & 12.272007 & 0.767000 & 3.157771 & 0.569463\\
+1024 & 24.964856 & 0.780152 & 3.850917 & 0.555570\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
