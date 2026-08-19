@@ -28,11 +28,7 @@
 \aistatsaddress{Johns Hopkins University}
 ]
 \begin{abstract}
-U-calibration asks one online probability forecaster to have low regret for every bounded proper loss, including losses unknown when the forecasts are made. For nontrivial $K\geq2$, the optimal worst-case rate is $\Theta(\!\sqrt{\min\{K,T\}T}\,)$, while the smooth-loss class has minimax time rate $\Theta(\log T)$. A recent simultaneous algorithm attains both time rates but leaves a polynomial gap in $K$. We show that the classical Bayesian bootstrap closes this gap. At round $t$, independently assign exponential weights to the past outcomes and predict their normalized weighted histogram. Equivalently, if $c_{t-1}$ is the vector of past outcome counts, sample $P_t\sim\operatorname{Dirichlet}(c_{t-1})$ on the observed face of the simplex. For every outcome sequence with terminal counts $n_1,\ldots,n_K$, observed support size $m$, and every proper loss in $[-1,1]$, the expected regret is at most
-\[
-6\sum_{i=1}^K\sqrt{n_i}\leq6\sqrt{mT}\leq6\sqrt{\min\{K,T\}T}.
-\]
-For every $\beta$-smooth loss, the same forecasts have regret at most the regret of empirical follow-the-leader plus $(\beta/2)\log T$, and therefore $O(\beta\log T)$ for bounded smooth proper losses. The proof uses three elementary facts: a one-count Dirichlet update has total variation $O(1/\sqrt{c_i})$, size-biasing an exponential weight adds an independent exponential weight, and weighted be-the-leader holds simultaneously for all proper losses. A class-aggregation reduction gives the matching dimension-capped lower bound. The algorithm is loss-agnostic, horizon-free, proper, and minimax-optimal for the worst bounded loss while retaining the minimax-optimal smooth-class time rate.
+U-calibration asks one online probability forecaster to have low regret for every bounded proper loss, including losses unknown when the forecasts are made. For nontrivial $K\geq2$, the optimal worst-case rate is $\Theta(\!\sqrt{\min\{K,T\}T}\,)$, while the smooth-loss class has minimax time rate $\Theta(\log T)$. A recent simultaneous algorithm attains both time rates but leaves a polynomial gap in $K$. We show that the classical Bayesian bootstrap closes this gap. At round $t$, independently assign exponential weights to the past outcomes and predict their normalized weighted histogram. Equivalently, if $c_{t-1}$ is the vector of past outcome counts, sample $P_t\sim\operatorname{Dirichlet}(c_{t-1})$ on the observed face of the simplex. For every outcome sequence with terminal counts $n_1,\ldots,n_K$, observed support size $m$, and every proper loss in $[-1,1]$, the expected regret is at most \[ 6\sum_{i=1}^K\sqrt{n_i}\leq6\sqrt{mT}\leq6\sqrt{\min\{K,T\}T}. \] For every $\beta$-smooth loss, the same forecasts have regret at most the regret of empirical follow-the-leader plus $(\beta/2)\log T$, and therefore $O(\beta\log T)$ for bounded smooth proper losses. The proof uses three elementary facts: a one-count Dirichlet update has total variation $O(1/\sqrt{c_i})$, size-biasing an exponential weight adds an independent exponential weight, and weighted be-the-leader holds simultaneously for all proper losses. A class-aggregation reduction gives the matching dimension-capped lower bound. The algorithm is loss-agnostic, horizon-free, proper, and minimax-optimal for the worst bounded loss while retaining the minimax-optimal smooth-class time rate.
 \end{abstract}
 
 \section{Introduction}
@@ -50,38 +46,19 @@ The result is unexpectedly direct. If the current label has appeared $j$ times, 
 Smooth adaptation comes from another basic property of the Bayesian bootstrap. A Dirichlet draw centered at the empirical frequency is unbiased, with total squared variance at most $1/t$. Smoothness therefore charges at most $\beta/(2t)$ relative to empirical follow-the-leader. The harmonic sum preserves logarithmic regret.
 
 \paragraph{Contributions.} Our main theorem gives a single horizon-free algorithm with
-\[
-\Reg_\ell\leq6\sum_i\sqrt{n_i}\leq6\sqrt{mT}\leq6\sqrt{\min\{K,T\}T}
-\]
-for every bounded proper loss $\ell$. The first inequality is support and frequency adaptive, and a class-aggregation corollary proves that the final rate is minimax-optimal in every dimension regime. For every bounded $\beta$-smooth proper loss, the same algorithm has $O(\beta\log T)$ regret, which matches the smooth-class time lower bound. Unlike prior optimal-worst-case algorithms, the perturbation scale is not tuned to $T$. Unlike prediction-space Gaussian noise, every forecast belongs to the simplex.
+\[ \Reg_\ell\leq6\sum_i\sqrt{n_i}\leq6\sqrt{mT}\leq6\sqrt{\min\{K,T\}T} \] for every bounded proper loss $\ell$. The first inequality is support and frequency adaptive, and a class-aggregation corollary proves that the final rate is minimax-optimal in every dimension regime. For every bounded $\beta$-smooth proper loss, the same algorithm has $O(\beta\log T)$ regret, which matches the smooth-class time lower bound. Unlike prior optimal-worst-case algorithms, the perturbation scale is not tuned to $T$. Unlike prediction-space Gaussian noise, every forecast belongs to the simplex.
 
 \paragraph{Scope.} We follow the simultaneous expected-regret convention of \citet{frongillo2026}: one loss-agnostic algorithm satisfies a bound for every fixed loss. This is also called pseudo U-calibration, $\sup_\ell\E[\Reg_\ell]$, in \citet{luo2024}. We do not claim a bound on $\E[\sup_\ell\Reg_\ell]$. The self-concordant method also gives logarithmic regret for some nonsmooth losses that are smooth relative to the log barrier. Our theorem does not subsume that extension.
 
 \section{Setting and Prior Bounds}
 
-Let $[K]=\{1,\ldots,K\}$ and let
-\[
-\Delta_K=\left\{p\in\R_+^K:\sum_{i=1}^Kp_i=1\right\}.
-\]
-At round $t$, the forecaster outputs $P_t\in\Delta_K$ and observes $y_t\in[K]$. Write $e_i$ for the $i$th standard basis vector, $c_t=\sum_{s=1}^t e_{y_s}$ for the count vector, and $n_i=c_{T,i}$. Let $m=|\{i:n_i>0\}|$ be the number of observed outcomes.
+Let $[K]=\{1,\ldots,K\}$ and let \[ \Delta_K=\left\{p\in\R_+^K:\sum_{i=1}^Kp_i=1\right\}. \] At round $t$, the forecaster outputs $P_t\in\Delta_K$ and observes $y_t\in[K]$. Write $e_i$ for the $i$th standard basis vector, $c_t=\sum_{s=1}^t e_{y_s}$ for the count vector, and $n_i=c_{T,i}$. Let $m=|\{i:n_i>0\}|$ be the number of observed outcomes.
 
-A loss $\ell:\Delta_K\times[K]\to[-1,1]$ is \emph{proper} if, for every $q\in\Delta_K$,
-\[
-q\in\arg\min_{p\in\Delta_K}\sum_{i=1}^Kq_i\ell(p,i).
-\]
-For a fixed outcome sequence, expected regret is
-\[
-\Reg_\ell(T)=\E\!\left[\sum_{t=1}^T\ell(P_t,y_t)\right]-\min_{p\in\Delta_K}\sum_{t=1}^T\ell(p,y_t).
-\]
-Properness implies that the comparator is the terminal empirical frequency $c_T/T$. Expectations are only over the forecaster.
+A loss $\ell:\Delta_K\times[K]\to[-1,1]$ is \emph{proper} if, for every $q\in\Delta_K$, \[ q\in\arg\min_{p\in\Delta_K}\sum_{i=1}^Kq_i\ell(p,i). \] For a fixed outcome sequence, expected regret is \[ \Reg_\ell(T)=\E\!\left[\sum_{t=1}^T\ell(P_t,y_t)\right]-\min_{p\in\Delta_K}\sum_{t=1}^T\ell(p,y_t). \] Properness implies that the comparator is the terminal empirical frequency $c_T/T$. Expectations are only over the forecaster.
 
 The main statement is for an oblivious sequence. It also holds when $y_t$ is selected from the history before the fresh random draw at time $t$. This is the standard nonanticipating adaptive protocol. Section~S3 of the supplement gives the conditional argument and relates it to the usual fresh-perturbation reduction \citep{hutter2005}.
 
-A differentiable loss is $\beta$-smooth if for all $p,q\in\Delta_K$ and $y\in[K]$,
-\[
-\ell(p,y)\leq \ell(q,y)+\langle\nabla\ell(q,y),p-q\rangle+\frac\beta2\|p-q\|_2^2.
-\]
-We take $\beta\geq1$, which loses nothing because a loss with a smaller constant is also one-smooth. Empirical follow-the-leader predicts $Q_1=P_1$ and $Q_t=c_{t-1}/(t-1)$ for $t\geq2$. Prior work gives $\Reg_\ell^{\mathrm{FTL}}(T)=O(\beta\log T)$ for bounded $\beta$-smooth proper losses \citep{luo2024,frongillo2026}.
+A differentiable loss is $\beta$-smooth if for all $p,q\in\Delta_K$ and $y\in[K]$, \[ \ell(p,y)\leq \ell(q,y)+\langle\nabla\ell(q,y),p-q\rangle+\frac\beta2\|p-q\|_2^2. \] We take $\beta\geq1$, which loses nothing because a loss with a smaller constant is also one-smooth. Empirical follow-the-leader predicts $Q_1=P_1$ and $Q_t=c_{t-1}/(t-1)$ for $t\geq2$. Prior work gives $\Reg_\ell^{\mathrm{FTL}}(T)=O(\beta\log T)$ for bounded $\beta$-smooth proper losses \citep{luo2024,frongillo2026}.
 
 Table~\ref{tab:comparison} compares simultaneous methods. Geometric count perturbations obtain the optimal worst-loss rate but not smooth adaptation. Self-concordant noise adapts, but has a larger $K$ exponent in the worst case. The Bayesian bootstrap attains both target rates. Concurrent calibeating work reduces calibeating to regret minimization \citep{chen2026} or gives loss-based regularization for Lipschitz and Tsallis families \citep{fichtl2026}. Those results do not provide a worst-case-optimal learner for all bounded proper losses that also adapts to smooth losses.
 
@@ -109,68 +86,30 @@ Bayesian bootstrap, this paper & $6\sum_i\sqrt{n_i}\leq6\sqrt{\min\{K,T\}T}$ & $
 For a nonzero count vector $c\in\mathbb N_0^K$, let $\D_c$ denote the Dirichlet law on its observed face. Formally, draw independent $G_i\sim\operatorname{Gamma}(c_i,1)$ for $c_i>0$, set $G_i=0$ when $c_i=0$, and return $G/\sum_iG_i$. This definition includes lower-dimensional faces. If only one coordinate is positive, $\D_c$ is a point mass.
 
 \paragraph{Algorithm.} Choose any fixed $P_1\in\Delta_K$. At each round $t\geq2$, independently sample
-\[
-P_t\sim\D_{c_{t-1}}.
-\tag{BB}
-\]
-After observing $y_t$, update $c_t=c_{t-1}+e_{y_t}$. Equivalently, draw independent $W_{t,s}\sim\operatorname{Exp}(1)$ for $s<t$ and predict
-\[
-P_t=\frac{\sum_{s<t}W_{t,s}e_{y_s}}{\sum_{s<t}W_{t,s}}.
-\]
-The equivalence follows because sums of exponential variables are gamma and normalized independent gammas are Dirichlet. It is also exactly the Bayesian bootstrap after grouping repeated categorical observations \citep{rubin1981}.
+\[ P_t\sim\D_{c_{t-1}}. \tag{BB} \] After observing $y_t$, update $c_t=c_{t-1}+e_{y_t}$. Equivalently, draw independent $W_{t,s}\sim\operatorname{Exp}(1)$ for $s<t$ and predict \[ P_t=\frac{\sum_{s<t}W_{t,s}e_{y_s}}{\sum_{s<t}W_{t,s}}. \] The equivalence follows because sums of exponential variables are gamma and normalized independent gammas are Dirichlet. It is also exactly the Bayesian bootstrap after grouping repeated categorical observations \citep{rubin1981}.
 
 The count representation samples at most $m$ gamma variables per round and stores $K$ integer counts. It does not use $T$, $\ell$, or $\beta$.
 
 \begin{theorem}[Worst-loss guarantee]
 \label{thm:worst}
-For every $K,T$, every outcome sequence, and every proper $\ell:\Delta_K\times[K]\to[-1,1]$, the Bayesian-bootstrap forecaster satisfies
-\[
-\Reg_\ell(T)\leq6\sum_{i:n_i>0}\sqrt{n_i}\leq6\sqrt{mT}\leq6\sqrt{\min\{K,T\}T}.
-\]
-The same inequalities hold against a nonanticipating adaptive adversary in expectation over the realized outcome path.
+For every $K,T$, every outcome sequence, and every proper $\ell:\Delta_K\times[K]\to[-1,1]$, the Bayesian-bootstrap forecaster satisfies \[ \Reg_\ell(T)\leq6\sum_{i:n_i>0}\sqrt{n_i}\leq6\sqrt{mT}\leq6\sqrt{\min\{K,T\}T}. \] The same inequalities hold against a nonanticipating adaptive adversary in expectation over the realized outcome path.
 \end{theorem}
 
 \begin{theorem}[Smooth transfer]
 \label{thm:smooth}
-Let $\ell$ be a $\beta$-smooth proper loss and let $\Reg_\ell^{\mathrm{FTL}}(T)$ be the pathwise regret of empirical follow-the-leader initialized at the same $P_1$. Then
-\[
-\Reg_\ell(T)\leq \Reg_\ell^{\mathrm{FTL}}(T)+\frac\beta2\sum_{t=2}^T\frac1t.
-\]
-Consequently, every bounded $\beta$-smooth proper loss has $\Reg_\ell(T)=O(\beta\log T)$ under the same forecasts used in Theorem~\ref{thm:worst}.
+Let $\ell$ be a $\beta$-smooth proper loss and let $\Reg_\ell^{\mathrm{FTL}}(T)$ be the pathwise regret of empirical follow-the-leader initialized at the same $P_1$. Then \[ \Reg_\ell(T)\leq \Reg_\ell^{\mathrm{FTL}}(T)+\frac\beta2\sum_{t=2}^T\frac1t. \] Consequently, every bounded $\beta$-smooth proper loss has $\Reg_\ell(T)=O(\beta\log T)$ under the same forecasts used in Theorem~\ref{thm:worst}.
 \end{theorem}
 
 \begin{corollary}[All-regime minimax rate]
 \label{cor:minimax}
-Let $\mathcal L_K$ be the proper losses from $\Delta_K\times[K]$ to $[-1,1]$. For $K\geq2$ and $T\geq24$,
-\[
-\inf_{\mathcal A}\sup_{\substack{y_{1:T}\in[K]^T\\ \ell\in\mathcal L_K}}
-\Reg^{\mathcal A}_\ell(T)
-=\Theta\!\left(\sqrt{\min\{K,T\}T}\right),
-\]
-where the infimum is over randomized forecasting algorithms. The upper bound is horizon-free. Section~S5 proves the lower bound by aggregating $K$ outcomes onto $r=\min\{K,\lfloor T/12\rfloor\}$ outcomes and invoking the lower bound of \citet{luo2024}.
+Let $\mathcal L_K$ be the proper losses from $\Delta_K\times[K]$ to $[-1,1]$. For $K\geq2$ and $T\geq24$, \[ \inf_{\mathcal A}\sup_{\substack{y_{1:T}\in[K]^T\\ \ell\in\mathcal L_K}} \Reg^{\mathcal A}_\ell(T) =\Theta\!\left(\sqrt{\min\{K,T\}T}\right), \] where the infimum is over randomized forecasting algorithms. The upper bound is horizon-free. Section~S5 proves the lower bound by aggregating $K$ outcomes onto $r=\min\{K,\lfloor T/12\rfloor\}$ outcomes and invoking the lower bound of \citet{luo2024}.
 \end{corollary}
 
-For a realized randomized forecast sequence, write
-\[
-\widehat\Reg_\ell(T)=\sum_{t=1}^T\ell(P_t,y_t)-\min_{p\in\Delta_K}\sum_{t=1}^T\ell(p,y_t).
-\]
-The fresh draws also give a simultaneous guarantee over a finite collection of losses.
+For a realized randomized forecast sequence, write \[ \widehat\Reg_\ell(T)=\sum_{t=1}^T\ell(P_t,y_t)-\min_{p\in\Delta_K}\sum_{t=1}^T\ell(p,y_t). \] The fresh draws also give a simultaneous guarantee over a finite collection of losses.
 
 \begin{corollary}[Finite loss families]
 \label{cor:finite}
-Let $\mathcal L_0$ be a finite family of $M$ proper losses in $[-1,1]$. Against an oblivious or nonanticipating adaptive adversary, with probability at least $1-\delta$,
-\[
-\max_{\ell\in\mathcal L_0}\widehat\Reg_\ell(T)
-\leq6\sum_i\sqrt{n_i}+\sqrt{2T\log(M/\delta)}.
-\tag{1}
-\]
-For a fixed oblivious sequence,
-\[
-\E\max_{\ell\in\mathcal L_0}\widehat\Reg_\ell(T)
-\leq6\sum_i\sqrt{n_i}+\sqrt{2T\log M}.
-\tag{2}
-\]
-Thus the stronger expected-supremum notion is controlled for every finite loss family.
+Let $\mathcal L_0$ be a finite family of $M$ proper losses in $[-1,1]$. Against an oblivious or nonanticipating adaptive adversary, with probability at least $1-\delta$, \[ \max_{\ell\in\mathcal L_0}\widehat\Reg_\ell(T) \leq6\sum_i\sqrt{n_i}+\sqrt{2T\log(M/\delta)}. \tag{1} \] For a fixed oblivious sequence, \[ \E\max_{\ell\in\mathcal L_0}\widehat\Reg_\ell(T) \leq6\sum_i\sqrt{n_i}+\sqrt{2T\log M}. \tag{2} \] Thus the stronger expected-supremum notion is controlled for every finite loss family.
 \end{corollary}
 
 Corollary~\ref{cor:minimax} makes the bounded-loss guarantee minimax-optimal in every dimension regime. The $\Omega(\log T)$ squared-loss lower bound of \citet{luo2024} makes the smooth-class time rate optimal. The first inequality of Theorem~\ref{thm:worst} is stronger when only a few classes occur or the terminal histogram is unbalanced.
@@ -181,67 +120,26 @@ The proof rests on an elementary update lemma. We use $\TV(\mu,\nu)=\tfrac12\int
 
 \begin{lemma}[One-count update]
 \label{lem:tv}
-Let $c\neq0$, $N=\sum_kc_k$, and $c_i>0$. Then
-\[
-\TV(\D_c,\D_{c+e_i})
-\leq\frac12\sqrt{\frac{N-c_i}{c_i(N+1)}}
-\leq\frac1{2\sqrt{c_i}}.
-\tag{3}
-\]
-If $c_i=0$, the total variation is at most one.
+Let $c\neq0$, $N=\sum_kc_k$, and $c_i>0$. Then \[ \TV(\D_c,\D_{c+e_i}) \leq\frac12\sqrt{\frac{N-c_i}{c_i(N+1)}} \leq\frac1{2\sqrt{c_i}}. \tag{3} \] If $c_i=0$, the total variation is at most one.
 \end{lemma}
 
 \begin{proof}
-Work on the face indexed by $\supp(c)$. The ratio of Dirichlet densities is
-\[
-\frac{d\D_{c+e_i}}{d\D_c}(p)=\frac{Np_i}{c_i}.
-\]
-If $P\sim\D_c$, then $P_i\sim\operatorname{Beta}(c_i,N-c_i)$ and
-\[
-\operatorname{Var}\!\left(\frac{NP_i}{c_i}\right)=\frac{N-c_i}{c_i(N+1)}.
-\]
-The first inequality follows from the density ratio and Cauchy--Schwarz. The second is immediate. If $c_i=0$, the two laws can lie on different faces, so we use the trivial bound. When $c_i=N$, both laws are the same point mass and the displayed bound is zero.
+Work on the face indexed by $\supp(c)$. The ratio of Dirichlet densities is \[ \frac{d\D_{c+e_i}}{d\D_c}(p)=\frac{Np_i}{c_i}. \] If $P\sim\D_c$, then $P_i\sim\operatorname{Beta}(c_i,N-c_i)$ and \[ \operatorname{Var}\!\left(\frac{NP_i}{c_i}\right)=\frac{N-c_i}{c_i(N+1)}. \] The first inequality follows from the density ratio and Cauchy--Schwarz. The second is immediate. If $c_i=0$, the two laws can lie on different faces, so we use the trivial bound. When $c_i=N$, both laws are the same point mass and the displayed bound is zero.
 \end{proof}
 
-If a label appears $n_i$ times, applying Lemma~\ref{lem:tv} successively gives a cumulative change proportional to
-\[
-\sum_{j=1}^{n_i}j^{-1/2}=O(\sqrt{n_i}).
-\]
-This controls stability. To control the comparator term with the same update, we next exploit a property specific to exponential weights.
+If a label appears $n_i$ times, applying Lemma~\ref{lem:tv} successively gives a cumulative change proportional to \[ \sum_{j=1}^{n_i}j^{-1/2}=O(\sqrt{n_i}). \] This controls stability. To control the comparator term with the same update, we next exploit a property specific to exponential weights.
 
 \section{Exponential Size Bias and Be the Leader}
 
-Fix the entire outcome sequence only for this argument. Draw one global collection $W_1,\ldots,W_T\stackrel{\mathrm{iid}}\sim\operatorname{Exp}(1)$ and define the weighted leader after observing round $t$ by
-\[
-A_{t+1}=\frac{\sum_{s\leq t}W_se_{y_s}}{\sum_{s\leq t}W_s}.
-\tag{4}
-\]
-For every realization of the weights and every proper loss, $A_{t+1}$ minimizes the weighted cumulative loss through $t$. The standard be-the-leader lemma \citep{cesabianchi2006} therefore gives
-\[
-\sum_{t=1}^TW_t\ell(A_{t+1},y_t)
-\leq\min_{p\in\Delta_K}\sum_{t=1}^TW_t\ell(p,y_t).
-\tag{5}
-\]
-Although the global weights couple rounds, we use them only to prove an inequality about the marginal Dirichlet laws in (BB). The actual algorithm resamples independently.
+Fix the entire outcome sequence only for this argument. Draw one global collection $W_1,\ldots,W_T\stackrel{\mathrm{iid}}\sim\operatorname{Exp}(1)$ and define the weighted leader after observing round $t$ by \[ A_{t+1}=\frac{\sum_{s\leq t}W_se_{y_s}}{\sum_{s\leq t}W_s}. \tag{4} \] For every realization of the weights and every proper loss, $A_{t+1}$ minimizes the weighted cumulative loss through $t$. The standard be-the-leader lemma \citep{cesabianchi2006} therefore gives \[ \sum_{t=1}^TW_t\ell(A_{t+1},y_t) \leq\min_{p\in\Delta_K}\sum_{t=1}^TW_t\ell(p,y_t). \tag{5} \] Although the global weights couple rounds, we use them only to prove an inequality about the marginal Dirichlet laws in (BB). The actual algorithm resamples independently.
 
 \begin{lemma}[Dirichlet be-the-perturbed-leader]
 \label{lem:btpl}
-For every fixed outcome sequence and every bounded proper loss,
-\[
-\sum_{t=1}^T\E_{P\sim\D_{c_t}}\ell(P,y_t)
--\min_{p\in\Delta_K}\sum_{t=1}^T\ell(p,y_t)
-\leq\sum_{i=1}^K\sum_{j=1}^{n_i}\frac1{\sqrt j}.
-\tag{6}
-\]
+For every fixed outcome sequence and every bounded proper loss, \[ \sum_{t=1}^T\E_{P\sim\D_{c_t}}\ell(P,y_t) -\min_{p\in\Delta_K}\sum_{t=1}^T\ell(p,y_t) \leq\sum_{i=1}^K\sum_{j=1}^{n_i}\frac1{\sqrt j}. \tag{6} \]
 \end{lemma}
 
 \begin{proof}
-For $W\sim\operatorname{Exp}(1)$ and every integrable $f$,
-\[
-\E[Wf(W)]=\E[f(W+W')],
-\tag{7}
-\]
-where $W'$ is an independent exponential variable. Indeed, the size-biased density $we^{-w}$ is $\operatorname{Gamma}(2,1)$, the law of $W+W'$.
+For $W\sim\operatorname{Exp}(1)$ and every integrable $f$, \[ \E[Wf(W)]=\E[f(W+W')], \tag{7} \] where $W'$ is an independent exponential variable. Indeed, the size-biased density $we^{-w}$ is $\operatorname{Gamma}(2,1)$, the law of $W+W'$.
 
 Suppose $y_t=i$ and it is the $j$th occurrence of class $i$. Ordinarily, (4) has law $\D_{c_t}$. In the $W_t$-weighted expectation on the left of (5), identity (7) adds one exponential copy of the current observation. Thus its law is $\D_{c_t+e_i}$. Taking expectations in (5) gives
 \begin{align*}
@@ -256,45 +154,15 @@ This is the main reason for exponential rather than generic random weights. The 
 
 \section{Proof of the Main Theorems}
 
-For $c\neq0$, define
-\[
-L_t(c)=\E_{P\sim\D_c}\ell(P,y_t).
-\]
-Let $\D_0$ be the point mass at $P_1$, so this notation also covers the first round. Add and subtract $L_t(c_t)$ to decompose regret as
+For $c\neq0$, define \[ L_t(c)=\E_{P\sim\D_c}\ell(P,y_t). \] Let $\D_0$ be the point mass at $P_1$, so this notation also covers the first round. Add and subtract $L_t(c_t)$ to decompose regret as
 \begin{align}
 \Reg_\ell(T)
 ={}&\sum_{t=1}^T\bigl(L_t(c_{t-1})-L_t(c_t)\bigr) \tag{8}\\
 &+\sum_{t=1}^TL_t(c_t)-\min_p\sum_{t=1}^T\ell(p,y_t).\nonumber
 \end{align}
-The second line is bounded by Lemma~\ref{lem:btpl}. For the first line, consider the $j$th occurrence of class $i$. If $j=1$, total variation is at most one. If $j\geq2$, Lemma~\ref{lem:tv} with the previous count $j-1$ gives
-\[
-L_t(c_{t-1})-L_t(c_t)\leq\frac1{\sqrt{j-1}}.
-\]
-Consequently,
-\[
-\Reg_\ell(T)\leq 2m+\sum_i\sum_{j=1}^{n_i-1}\frac1{\sqrt j}
-+\sum_i\sum_{j=1}^{n_i}\frac1{\sqrt j}.
-\]
-Using $\sum_{j=1}^n j^{-1/2}\leq2\sqrt n$ and $m\leq\sum_i\sqrt{n_i}$ proves
-\[
-\Reg_\ell(T)\leq6\sum_i\sqrt{n_i}.
-\]
-Cauchy--Schwarz gives $\sum_i\sqrt{n_i}\leq\sqrt{mT}$, and $m\leq\min\{K,T\}$, proving Theorem~\ref{thm:worst}.
+The second line is bounded by Lemma~\ref{lem:btpl}. For the first line, consider the $j$th occurrence of class $i$. If $j=1$, total variation is at most one. If $j\geq2$, Lemma~\ref{lem:tv} with the previous count $j-1$ gives \[ L_t(c_{t-1})-L_t(c_t)\leq\frac1{\sqrt{j-1}}. \] Consequently, \[ \Reg_\ell(T)\leq 2m+\sum_i\sum_{j=1}^{n_i-1}\frac1{\sqrt j} +\sum_i\sum_{j=1}^{n_i}\frac1{\sqrt j}. \] Using $\sum_{j=1}^n j^{-1/2}\leq2\sqrt n$ and $m\leq\sum_i\sqrt{n_i}$ proves \[ \Reg_\ell(T)\leq6\sum_i\sqrt{n_i}. \] Cauchy--Schwarz gives $\sum_i\sqrt{n_i}\leq\sqrt{mT}$, and $m\leq\min\{K,T\}$, proving Theorem~\ref{thm:worst}.
 
-For Theorem~\ref{thm:smooth}, set $q=c_{t-1}/(t-1)$ for $t\geq2$. If $P\sim\D_{c_{t-1}}$, standard Dirichlet moments give
-\[
-\E[P]=q,
-\qquad
-\E\|P-q\|_2^2=\frac{1-\|q\|_2^2}{t}\leq\frac1t.
-\tag{9}
-\]
-Smoothness and the zero mean of $P-q$ imply
-\[
-\E[\ell(P,y_t)-\ell(q,y_t)]
-\leq\frac\beta2\E\|P-q\|_2^2
-\leq\frac\beta{2t}.
-\]
-At round one, the bootstrap and FTL use the same initialization. Summing the comparison and adding the common comparator proves the transfer inequality. The prior $O(\beta\log T)$ FTL bound gives the corollary.
+For Theorem~\ref{thm:smooth}, set $q=c_{t-1}/(t-1)$ for $t\geq2$. If $P\sim\D_{c_{t-1}}$, standard Dirichlet moments give \[ \E[P]=q, \qquad \E\|P-q\|_2^2=\frac{1-\|q\|_2^2}{t}\leq\frac1t. \tag{9} \] Smoothness and the zero mean of $P-q$ imply \[ \E[\ell(P,y_t)-\ell(q,y_t)] \leq\frac\beta2\E\|P-q\|_2^2 \leq\frac\beta{2t}. \] At round one, the bootstrap and FTL use the same initialization. Summing the comparison and adding the common comparator proves the transfer inequality. The prior $O(\beta\log T)$ FTL bound gives the corollary.
 
 To prove Corollary~\ref{cor:finite}, condition at round $t$ on the history and the outcome selected before the fresh draw. For each fixed $\ell$, the difference between $\ell(P_t,y_t)$ and its conditional expectation is a martingale difference whose range has length two. Hoeffding's lemma and a union bound over $\mathcal L_0$ give (1). The deterministic count-vector inequality proved above bounds the sum of conditional expectations minus the realized-path comparator. The standard log-moment-generating-function argument gives (2). The supplement gives the details and an extension through uniform covers.
 
