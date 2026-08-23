@@ -22,5 +22,7 @@ optimal-dimension, u-calibration, bayesian, bootstrap, asks, online, probability
 
 ## Files
 
+- `main_2026-08-13.pdf`, the paper as first published, with its OpenTimestamps proof `main_2026-08-13.pdf.ots`.
+- `supplement_2026-08-13.pdf`, the supplement as first published, with its OpenTimestamps proof `supplement_2026-08-13.pdf.ots`.
 - source: `aistats2027.sty`, `main_2026-08-13.tex`, `references.bib`, `supplement_2026-08-13.tex`.
-- also: `main_2026-08-13.bbl`, `main_2026-08-13.pdf`, `supplement_2026-08-13.pdf`.
+- also: `main_2026-08-13.bbl`.
